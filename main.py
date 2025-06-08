@@ -1,14 +1,41 @@
-def start_project():
-    print("شروع پروژه WARP+ رفرال")
+import requests
+import random
+import string
+import time
 
-def send_referral(referral_code, count):
+def random_string(length=22):
+    return ''.join(random.choices(string.ascii_letters + string.digits + '_-', k=length))
+
+def send_warp_referral(referral_code, count=100):
+    url = "https://api.cloudflareclient.com/v0a745/reg"
+    headers = {
+        "User-Agent": "okhttp/3.12.1",
+        "Content-Type": "application/json; charset=UTF-8"
+    }
     for i in range(count):
-        # اینجا کد ارسال رفرال رو می‌نویسی
-        print(f"رفرال شماره {i+1} با کد {referral_code} ارسال شد.")
-        # می‌تونی اینجا تاخیر بذاری مثلا time.sleep(1)
+        install_id = random_string()
+        fcm_token = f"{install_id}:APA91b{random_string(134)}"
+        key = random_string(43) + "="
+
+        payload = {
+            "key": key,
+            "install_id": install_id,
+            "fcm_token": fcm_token,
+            "referrer": referral_code,
+            "warp_enabled": False,
+            "tos": int(time.time()),
+            "type": "Android",
+            "locale": "en_US"
+        }
+
+        response = requests.post(url, json=payload, headers=headers)
+        if response.status_code == 200:
+            print(f"رفرال شماره {i+1} ارسال شد!")
+        else:
+            print(f"خطا در ارسال رفرال شماره {i+1} - کد وضعیت: {response.status_code}")
+
+        time.sleep(3)  # تاخیر برای جلوگیری از بلاک شدن
 
 if __name__ == "__main__":
-    start_project()
     referral_code = "UjZJq"
-    count = 100  # تعداد دفعاتی که می‌خوای رفرال بزنه
-    send_referral(referral_code, count)
+    send_warp_referral(referral_code, 100)
