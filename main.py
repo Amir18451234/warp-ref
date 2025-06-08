@@ -10,7 +10,10 @@ def send_warp_referral(referral_code, count=100):
     url = "https://api.cloudflareclient.com/v0a745/reg"
     headers = {
         "User-Agent": "okhttp/3.12.1",
-        "Content-Type": "application/json; charset=UTF-8"
+        "Content-Type": "application/json; charset=UTF-8",
+        "Accept-Encoding": "gzip",
+        "Connection": "Keep-Alive",
+        "Host": "api.cloudflareclient.com"
     }
     for i in range(count):
         install_id = random_string()
@@ -32,10 +35,10 @@ def send_warp_referral(referral_code, count=100):
         if response.status_code == 200:
             print(f"رفرال شماره {i+1} ارسال شد!")
         else:
-            print(f"خطا در ارسال رفرال شماره {i+1} - کد وضعیت: {response.status_code}")
+            print(f"خطا در ارسال رفرال شماره {i+1} - کد وضعیت: {response.status_code} - پاسخ: {response.text}")
 
-        time.sleep(3)  # تاخیر برای جلوگیری از بلاک شدن
+        time.sleep(3)
 
 if __name__ == "__main__":
     referral_code = "UjZJq"
-    send_warp_referral(referral_code, 100)
+    send_warp_referral(referral_code, 10)  # اول 10 بار تست کن
